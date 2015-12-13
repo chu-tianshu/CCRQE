@@ -1,0 +1,23 @@
+	                                        ChineseCharacter
+	                                        /              \
+	                       IndependentChineseCharacter      \
+	                      /             |                    \
+	               Radicals    SimpleChineseCharacter  ComplexChineseCharacter
+	                                                  /         /  \          \
+	                         HorizontalChineseCharacter        /    \          VerticalChineseCharacter
+	                        /                  |              /      \           |                    \
+	  LeftRightChineseCharacter   RightLeftChineseCharacter  /        \ UpBottomChineseCharacter      BottomUpChineseCharacter
+	                                                        /          \
+	                                                       /            \
+	                            						  /              \       
+														 /                \
+														/                  \
+													   /                    \
+													  /                      \
+												     /                        \
+													/                          \
+												   /                            \
+	                                   SurroundingChineseCharacter    HalfsurroundingChineseCharacter                
+                                                              
+                                                              
+                                                              
