@@ -92,58 +92,69 @@ public:
 	//Getter of FC and near/far scores
 	double getFC()
 	{
+		printf("FC = %3f\n", FC);
 		return FC;
 	}
 
 	double getMuonNearFC()
 	{
+		printf("muonNearFC = %3f\n", muonNearFC);
 		return muonNearFC;
 	}
 
 	double getMuonFarFC()
 	{
+		printf("muonFarFC = %3f\n", muonFarFC);
 		return muonFarFC;
 	}
 
 	//Getter of FA and large/proper/small scores
 	double getFA()
 	{
+		printf("FA = %3f\n", FA);
 		return FA;
 	}
 
 	double getMuonSmallFA()
 	{
+		printf("muonSmallFA = %3f\n", muonSmallFA);
 		return muonSmallFA;
 	}
 
 	double getMuonProperFA()
 	{
+		printf("muonProperFA = %3f\n", muonProperFA);
 		return muonProperFA;
 	}
 
 	double getMuonLargeFA()
 	{
+		printf("muonLargeFA = %3f\n", muonLargeFA);
 		return muonLargeFA;
 	}
 
 	//Getter of FR and tall/proper/short scores
 	double getFR()
 	{
+		printf("FR = %3f\n", FR);
 		return FR;
 	}
 
 	double getMuonTallFR()
 	{
+		printf("muonTallFR = %3f\n", muonTallFR);
 		return muonTallFR;
 	}
 
 	double getMuonProperFR()
 	{
+		printf("muonProperFR = %3f\n", muonProperFR);
 		return muonProperFR;
 	}
 
 	double getMuonShortFR()
 	{
+		printf("muonShortFR = %3f\n", muonShortFR);
 		return muonShortFR;
 	}
 
@@ -232,4 +243,11 @@ private:
 	double muonLeftFS;
 	double muonProperFS;
 	double muonRightFS;
+
+	double SC;
+	double SA;
+	double SR;
+	double SDx;
+	double SDy;
+	double SS;
 };
