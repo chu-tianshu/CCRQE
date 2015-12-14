@@ -422,9 +422,95 @@ public:
 		normalizedDistribution[6] = numOfRDgnPointsOnLeftBottom / meanOfNumbers;
 		normalizedDistribution[7] = numOfRDgnPointsOnRightTop / meanOfNumbers;
 
+		//Set up bounding box information
+		unsigned char *greyBounded = getChannel(whiteBoundedImage, 0);
+
+		xLeftmost = width - 1;
+
+		for (int k = 0; k < lengthOfGreyScale; k++)
+		{
+			int x = k - (k / width) * width;
+			int y = k / width;
+
+			if (greyBounded[k] == 0)
+			{
+				if (x < xLeftmost)
+				{
+					xLeftmost = x;
+				}
+			}
+		}
+
+		xRightmost = 0;
+
+		for (int k = 0; k < lengthOfGreyScale; k++)
+		{
+			int x = k - (k / width) * width;
+			int y = k / width;
+
+			if (greyBounded[k] == 0)
+			{
+				if (x > xRightmost)
+				{
+					xRightmost = x;
+				}
+			}
+		}
+
+		yUpmost = 0;
+
+		for (int k = 0; k < lengthOfGreyScale; k++)
+		{
+			int x = k - (k / width) * width;
+			int y = k / width;
+
+			if (greyBounded[k] == 0)
+			{
+				if (y > yUpmost)
+				{
+					yUpmost = y;
+				}
+			}
+		}
+
+		yBottommost = height - 1;
+
+		for (int k = 0; k < lengthOfGreyScale; k++)
+		{
+			int x = k - (k / width) * width;
+			int y = k / width;
+
+			if (greyBounded[k] == 0)
+			{
+				if (y < yBottommost)
+				{
+					yBottommost = y;
+				}
+			}
+		}
+
+		widthOfBB = xRightmost - xLeftmost + 1;
+		heightOfBB = yUpmost - yBottommost + 1;
+
 		//Set up position of gravity center
 		xOfGravityCenter = xOfCenterOfGravity(whiteBoundedImage);
 		yOfGravityCenter = yOfCenterOfGravity(whiteBoundedImage);
+
+		//Set up number of pixels in quadrants
+		int xCtOfBB = (getLeftMostX() + getRightMostX()) / 2;
+		int yCtOfBB = (getUpMostY() + getBottomMostY()) / 2;
+
+		numOfPixelsInQuads = numOfPixelsInEachQuadrant(whiteBoundedImage, xCtOfBB, yCtOfBB);
+
+		//Set up elastic mesh
+		xLeftThird = xLeftThirdMesh(whiteBoundedImage);
+		xRightThird = xRightThirdMesh(whiteBoundedImage);
+		yBottomThird = yBottomThirdMesh(whiteBoundedImage);
+		yUpThird = yUpThirdMesh(whiteBoundedImage);
+
+		//Set up projections
+		proX = projectionX(whiteBoundedImage);
+		proY = projectionY(whiteBoundedImage);
 	}
 
 	virtual ~ChineseCharacter()
@@ -454,106 +540,6 @@ public:
 	unsigned char *getSegmentedImage()
 	{
 		return segmentedImage;
-	}
-
-	int getLeftMostX()
-	{
-		int lengthOfGreyScale = width * height;
-
-		unsigned char *red = getChannel(image, 0);
-
-		int XL = width - 1;
-
-		for (int k = 0; k < lengthOfGreyScale; k++)
-		{
-			int x = k - (k / width) * width;
-			int y = k / width;
-
-			if (red[k] == 0)
-			{
-				if (x < XL)
-				{
-					XL = x;
-				}
-			}
-		}
-
-		return XL;
-	}
-
-	int getRightMostX()
-	{
-		int lengthOfGreyScale = width * height;
-
-		unsigned char *red = getChannel(image, 0);
-
-		int XR = 0;
-
-		for (int k = 0; k < lengthOfGreyScale; k++)
-		{
-			int x = k - (k / width) * width;
-			int y = k / width;
-
-			if (red[k] == 0)
-			{
-				if (x > XR)
-				{
-					XR = x;
-				}
-			}
-		}
-
-		return XR;
-	}
-
-	int getUpMostY()
-	{
-		int lengthOfGreyScale = width * height;
-
-		unsigned char *red = getChannel(image, 0);
-
-		int YU = 0;
-
-		for (int k = 0; k < lengthOfGreyScale; k++)
-		{
-			int x = k - (k / width) * width;
-			int y = k / width;
-
-			if (red[k] == 0)
-			{
-				if (y > YU)
-				{
-					YU = y;
-				}
-			}
-		}
-
-		return YU;
-	}
-
-	int getBottomMostY()
-	{
-		int lengthOfGreyScale = width * height;
-
-		unsigned char *red = getChannel(image, 0);
-
-		int YB = height - 1;
-
-		for (int k = 0; k < lengthOfGreyScale; k++)
-		{
-			int x = k - (k / width) * width;
-			int y = k / width;
-
-			if (red[k] == 0)
-			{
-				if (y < YB)
-				{
-					YB = y;
-				}
-			}
-		}
-
-		return YB;
 	}
 
 	unsigned char *getConnectionValueMap()
@@ -620,7 +606,7 @@ public:
 	int getMaxBlurredWeight()
 	{
 		//For testing:
-		printf("Max blurred weight: %d", maxBlurredWeight);
+		//printf("Max blurred weight: %d", maxBlurredWeight);
 
 		return maxBlurredWeight;
 	}
@@ -734,10 +720,40 @@ public:
 		}
 	}*/
 
+	int getLeftMostX()
+	{
+		return xLeftmost;
+	}
+
+	int getRightMostX()
+	{
+		return xRightmost;
+	}
+
+	int getBottomMostY()
+	{
+		return yBottommost;
+	}
+
+	int getUpMostY()
+	{
+		return yUpmost;
+	}
+
+	int getWidthOfBB()
+	{
+		return widthOfBB;
+	}
+
+	int getHeightOfBB()
+	{
+		return heightOfBB;
+	}
+
 	int getXOfGravityCenter()
 	{
 		//For testing:
-		printf("%d ", xOfGravityCenter);
+//		printf("%d ", xOfGravityCenter);
 
 		return xOfGravityCenter;
 	}
@@ -745,9 +761,62 @@ public:
 	int getYOfGravityCenter()
 	{
 		//For testing:
-		printf("%d ", yOfGravityCenter);
-		
+//		printf("%d ", yOfGravityCenter);
+
 		return yOfGravityCenter;
+	}
+
+	int *getNumOfPixelsInQuads()
+	{
+		//For testing:
+/*		for (int i = 0; i < 4; i++)
+		{
+			printf("%d, ", numOfPixelsInQuads[i]);
+		}*/
+
+		return numOfPixelsInQuads;
+	}
+
+	int getXLeftThird()
+	{
+		//For testing:
+		//printf("%d", xLeftThird);
+
+		return xLeftThird;
+	}
+
+	int getXRightThird()
+	{
+		//For testing:
+		//printf("%d", xRightThird);
+
+		return xRightThird;
+	}
+
+	int getYBottomThird()
+	{
+		//For testing:
+//		printf("%d", yBottomThird);
+
+		return yBottomThird;
+	}
+
+	int getYUpThird()
+	{
+		//For testing:
+//		printf("%d", yUpThird);
+
+		return yUpThird;
+	}
+
+	int *getProX()
+	{
+		return proX;
+	}
+
+	int *getProY()
+	{
+		return proY;
 	}
 
 private:
@@ -795,8 +864,21 @@ private:
 	double meanOfNumbers;
 	double *normalizedDistribution;
 
+	int xLeftmost;
+	int xRightmost;
+	int yBottommost;
+	int yUpmost;
+	int widthOfBB;
+	int heightOfBB;
 	int xOfGravityCenter;
 	int yOfGravityCenter;
+	int *numOfPixelsInQuads;
+	int xLeftThird;
+	int xRightThird;
+	int yBottomThird;
+	int yUpThird;
+	int *proX;
+	int *proY;
 };
 
 class IndependentChineseCharacter:ChineseCharacter

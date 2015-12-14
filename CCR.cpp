@@ -9,6 +9,7 @@
 #include "glIO.h"
 #include "characterClasses.cpp"
 #include "templateMatching.cpp"
+#include "assesser.cpp"
 
 using namespace std;
 
@@ -81,9 +82,34 @@ int main(int argc, char *argv[])
 //	printf("dist chuanSp chuanTplt: %3f\n", distChuanChuan);
 //	printf("dist heSp chuanTplt: %3f\n", distHeChuan);
 
-	chuanSpChar.getYOfGravityCenter();
+//	heSpChar.getYUpThird();
+	
+	Assesser heAssesser(heSpChar, heTpltChar);
 
-	final = chuanTpltChar.getGaborFilteredImageLDgn();
+//	heAssesser.getMuonNearFC();
+//	heAssesser.getMuonFarFC();
+//	heAssesser.getMuonSmallFA();
+//	heAssesser.getMuonProperFA();
+//	heAssesser.getMuonLargeFA();
+//	heAssesser.getDx();
+//	heAssesser.getDy();
+//	heAssesser.getMuonLessDx();
+//	heAssesser.getMuonMuchDx();
+//	heAssesser.getMuonLessDy();
+//	heAssesser.getMuonMuchDy();
+	heAssesser.getFS();
+	heAssesser.getMuonLeftFS();
+	heAssesser.getMuonProperFS();
+	heAssesser.getMuonRightFS();
+
+	Assesser chuanAssesser(chuanSpChar, chuanTpltChar);
+
+//	chuanAssesser.getFS();
+//	chuanAssesser.getMuonLeftFS();
+//	chuanAssesser.getMuonProperFS();
+//	chuanAssesser.getMuonRightFS();
+
+	final = heSpChar.getGaborFilteredImageLDgn();
 
 	glutInit(&argc, argv);
 	glutInitWindowPosition(100, 100); // Where the window will display on-screen.

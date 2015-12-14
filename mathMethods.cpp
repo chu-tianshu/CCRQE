@@ -121,3 +121,54 @@ unsigned char *convolve(unsigned char *image, double *kernelReal, double *kernel
 
 	return convolved;
 }
+
+double GAMMA(double x, double a, double b)
+{
+	if (x < a)
+	{
+		return 1.0;
+	}
+	else if (x > b)
+	{
+		return 0.0;
+	}
+	else
+	{
+		return ((b - x * 1.0) / (b - a));
+	}
+}
+
+double LAMBDA(double x, double b, double c)
+{
+	if (x < b)
+	{
+		return 0.0;
+	}
+	else if (x > c)
+	{
+		return 1.0;
+	}
+	else
+	{
+		return ((x * 1.0 - b) / (c - b));
+	}
+}
+
+double DELTA(double x, double a, double b, double c)
+{
+	if (x < a || x > c)
+	{
+		return 0.0;
+	}
+	else
+	{
+		if (x <= b)
+		{
+			return ((x * 1.0 - a) / (b - a));
+		}
+		else
+		{
+			return ((c - x * 1.0) / (c - b));
+		}
+	}
+}
