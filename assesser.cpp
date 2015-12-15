@@ -10,10 +10,10 @@ public:
 	Assesser(ChineseCharacter sp, ChineseCharacter tplt)
 	{
 		//Set up FC and near/far scores
-		int spXC = sp.getXOfGravityCenter();
-		int spYC = sp.getYOfGravityCenter();
-		int tpltXC = tplt.getXOfGravityCenter();
-		int tpltYC = tplt.getYOfGravityCenter();
+		int spXC = (sp.getRightMostX() + sp.getLeftMostX()) / 2;
+		int spYC = (sp.getUpMostY() + sp.getBottomMostY()) / 2;
+		int tpltXC = (tplt.getRightMostX() + tplt.getLeftMostX()) / 2;
+		int tpltYC = (tplt.getUpMostY() + tplt.getBottomMostY()) / 2;
 
 		FC = sqrt(pow((spXC - tpltXC), 2) + pow((spYC - tpltYC), 2)) / (0.5 * width);
 
@@ -87,6 +87,41 @@ public:
 		muonLeftFS = GAMMA(FS, -1.0, 0.0);
 		muonProperFS = DELTA(FS, -0.4, 0.0, 0.4);
 		muonRightFS = LAMBDA(FS, 0, 1);
+	}
+
+	void assess()
+	{
+		SC = FC;
+
+		if (FA < -0.4 || FA > 0.4)
+		{
+			SA = 0;
+		}
+		else
+		{
+			SA = muonProperFA * 1.0 / (muonSmallFA + muonProperFA + muonLargeFA);
+		}
+
+		if (FR < -0.166667 || FR > 0.166667)
+		{
+			SR = 0;
+		}
+		else
+		{
+			SR = muonProperFR * 1.0 / (muonProperFR + muonTallFR + muonShortFR);
+		}
+
+		SDx = muonLessDx;
+		SDy = muonLessDy;
+
+		if (FS < -0.4 || FS > 0.4)
+		{
+			SS = 0;
+		}
+		else
+		{
+			SS = muonProperFS * 1.0 / (muonLeftFS + muonProperFS + muonRightFS);
+		}
 	}
 
 	//Getter of FC and near/far scores

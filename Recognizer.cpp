@@ -32,6 +32,31 @@ public:
 		GB1144 = readPPM("gb1144.ppm");
 		GB1497 = readPPM("gb1497.ppm");
 		GB303 = readPPM("gb303.ppm");
+
+		nameArray = new int[22];
+
+		nameArray[0] = 43;
+		nameArray[1] = 45;
+		nameArray[2] = 180;
+		nameArray[3] = 258;
+		nameArray[4] = 278;
+		nameArray[5] = 286;
+		nameArray[6] = 289;
+		nameArray[7] = 366;
+		nameArray[8] = 390;
+		nameArray[9] = 407;
+		nameArray[10] = 418;
+		nameArray[11] = 461;
+		nameArray[12] = 530;
+		nameArray[13] = 660;
+		nameArray[14] = 699;
+		nameArray[15] = 859;
+		nameArray[16] = 977;
+		nameArray[17] = 1039;
+		nameArray[18] = 1114;
+		nameArray[19] = 1144;
+		nameArray[20] = 1497;
+		nameArray[21] = 303;
 	}
 
 	double *measureByWeightedMap()
@@ -197,6 +222,10 @@ public:
 			printf("diff %d: %3f\n", i, diff[i]);
 		}
 
+		int minIndex = findMinIndex(diff, 22);
+
+		printf("You are trying to write gb%d.\n", nameArray[minIndex]);
+
 		return diff;
 	}
 
@@ -226,4 +255,7 @@ private:
 	unsigned char *GB1144;
 	unsigned char *GB1497;
 	unsigned char *GB303;
+
+	//array containing name of characters
+	int *nameArray;
 };

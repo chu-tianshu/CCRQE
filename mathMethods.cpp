@@ -172,3 +172,21 @@ double DELTA(double x, double a, double b, double c)
 		}
 	}
 }
+
+double findMinIndex(double *array, int lengthOfArray)
+{
+	double min = array[0];
+
+	int index = 0;
+
+	for (int i = 1; i < lengthOfArray; i++)
+	{
+		if (array[i] < min)
+		{
+			min = array[i];
+			index = i;
+		}
+	}
+
+	return index;
+}
