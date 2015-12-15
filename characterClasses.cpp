@@ -521,6 +521,12 @@ public:
 		yBottomThird = yBottomThirdMesh(whiteBoundedImage);
 		yUpThird = yUpThirdMesh(whiteBoundedImage);
 
+		xHalf = xHalfMesh(whiteBoundedImage);
+		yHalf = yHalfMesh(whiteBoundedImage);
+
+		xHalfRatio = (xHalf - xLeftmost * 1.0) / widthOfBB;
+		yHalfRatio = (yHalf - yBottommost * 1.0) / heightOfBB;
+
 		//Set up projections
 		proX = projectionX(whiteBoundedImage);
 		proY = projectionY(whiteBoundedImage);
@@ -832,6 +838,26 @@ public:
 		return yUpThird;
 	}
 
+	int getXHalf()
+	{
+		return xHalf;
+	}
+
+	int getYHalf()
+	{
+		return yHalf;
+	}
+
+	double getXHalfRatio()
+	{
+		return xHalfRatio;
+	}
+
+	double getYHalfRatio()
+	{
+		return yHalfRatio;
+	}
+
 	int *getProX()
 	{
 		return proX;
@@ -901,6 +927,10 @@ private:
 	int xRightThird;
 	int yBottomThird;
 	int yUpThird;
+	int xHalf;
+	int yHalf;
+	double xHalfRatio;
+	double yHalfRatio;
 	int *proX;
 	int *proY;
 };

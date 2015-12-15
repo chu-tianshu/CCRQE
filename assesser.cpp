@@ -10,10 +10,10 @@ public:
 	Assesser(ChineseCharacter sp, ChineseCharacter tplt)
 	{
 		//Set up FC and near/far scores
-		int spXC = (sp.getRightMostX() + sp.getLeftMostX()) / 2;
-		int spYC = (sp.getUpMostY() + sp.getBottomMostY()) / 2;
-		int tpltXC = (tplt.getRightMostX() + tplt.getLeftMostX()) / 2;
-		int tpltYC = (tplt.getUpMostY() + tplt.getBottomMostY()) / 2;
+		spXC = (sp.getRightMostX() + sp.getLeftMostX()) / 2;
+		spYC = (sp.getUpMostY() + sp.getBottomMostY()) / 2;
+		tpltXC = (tplt.getRightMostX() + tplt.getLeftMostX()) / 2;
+		tpltYC = (tplt.getUpMostY() + tplt.getBottomMostY()) / 2;
 
 		FC = sqrt(pow((spXC - tpltXC), 2) + pow((spYC - tpltYC), 2)) / (0.5 * width);
 
@@ -21,10 +21,10 @@ public:
 		muonFarFC = LAMBDA(FC, 0.1, 0.9);
 
 		//Set up FA and large/proper/small scores
-		int spBBWidth = sp.getWidthOfBB();
-		int spBBHeight = sp.getHeightOfBB();
-		int tpltBBWidth = tplt.getWidthOfBB();
-		int tpltBBHeight = tplt.getHeightOfBB();
+		spBBWidth = sp.getWidthOfBB();
+		spBBHeight = sp.getHeightOfBB();
+		tpltBBWidth = tplt.getWidthOfBB();
+		tpltBBHeight = tplt.getHeightOfBB();
 
 		FA = (spBBWidth * spBBHeight - tpltBBWidth * tpltBBHeight) / (tpltBBWidth * tpltBBHeight * 1.0);
 
@@ -44,6 +44,11 @@ public:
 		int *spProY = sp.getProY();
 		int *tpltProX = tplt.getProX();
 		int *tpltProY = tplt.getProY();
+
+		spXHalfRatio = sp.getXHalfRatio();
+		spYHalfRatio = sp.getYHalfRatio();
+		tpltXHalfRatio = tplt.getXHalfRatio();
+		tpltYHalfRatio = tplt.getYHalfRatio();
 
 		int sumOfDiffInProX = 0;
 		int sumOfSumInProX = 0;
@@ -130,6 +135,128 @@ public:
 		printf("Your score in center is %3f\n", S1 * 100);
 		printf("Your score in size is %3f\n", S2 * 100);
 		printf("Your score in projection is %3f\n", S3 * 100);
+
+		printf("Suggestions:\n");
+
+		if (SC > 0.95)
+		{
+			printf("You have placed your character right in the middle. Good job!\n");
+		}
+		else
+		{
+			printf("Your character is placed a little bit far from the center of the box.\n");
+
+			double horizontalDisplacementPercentage = abs(spXC - tpltXC) / (width * 1.0);
+			double verticalDisplacementPercentage = abs(spYC - tpltYC) / (height * 1.0);
+
+			if (spXC < tpltXC)
+			{
+				printf("You would need to move your character by %3f percent rightwards, and ", horizontalDisplacementPercentage * 100.0);
+			}
+			else if (spXC > tpltXC)
+			{
+				printf("You would need to move your character by %3f percent leftwards, and ", horizontalDisplacementPercentage * 100.0);
+			}
+			else
+			{
+				printf("You have placed your character correctly horizontally, but ");
+			}
+
+			if (spYC < tpltYC)
+			{
+				printf("you would need to move your character by %3f percent upwardes.\n", verticalDisplacementPercentage * 100.0);
+			}
+			else if (spYC < tpltYC)
+			{
+				printf("you would need to move your character by %3f percent downwards.\n", verticalDisplacementPercentage * 100.0);
+			}
+			else
+			{
+				printf("you have placed your character correctly vertically.\n");
+			}
+		}
+
+		if (FA < -0.07)
+		{
+			printf("Your character is too small in size.\n");
+
+			double expandPercentage = 1.0 / (1 + FA) - 1;
+
+			printf("Try to expand the size of your character by %3f percent.\n", expandPercentage * 100);
+		}
+		else if (FA > 0.07)
+		{
+			printf("Your character is too large in size.\n");
+
+			double shrinkPercentage = 1 - 1.0 / (1 + FA);
+
+			printf("Try to shrink the size of you character by %3f percent.\n", shrinkPercentage * 100);
+		}
+		else
+		{
+			printf("The size of your character is good.\n");
+		}
+
+		if (FR >= -1.0 / 30 && FR <= 1.0 / 30)
+		{
+			printf("The shape of your character is good.\n");
+		}
+		else if (FR < -1.0 / 30)
+		{
+			printf("Your character is too thin!\n");
+
+			double widerPercentage = (spBBHeight * tpltBBWidth / tpltBBHeight) / (spBBHeight * tpltBBWidth / tpltBBHeight + spBBHeight * FR) - 1;
+		
+			printf("Try to make your character wider by %3f percent.\n", widerPercentage * 100);
+		}
+		else
+		{
+			printf("Your character is too wide!\n");
+
+			double thinnerPercentage = (spBBHeight * tpltBBWidth / tpltBBHeight) / (spBBHeight * tpltBBWidth / tpltBBHeight + spBBHeight * FR) - 1;
+
+			printf("Try to make your character thinner by %3f percent.\n", thinnerPercentage * 100);
+		}
+
+		if (Dx <= 0.25)
+		{
+			printf("You have made a good distribution of ink in the horizontal orientation.\n");
+		}
+		else
+		{
+			printf("You have made your character unbalance horizontally.\n");
+
+			if (spXHalfRatio < tpltXHalfRatio)
+			{
+				printf("Ink is too heavily distributed on the left.\n");
+				printf("Try to make it more balance by reducing stroke length, and try to reduce white space on the right side.\n");
+			}
+			else
+			{
+				printf("Ink is too heavily distributed on the right.\n");
+				printf("Try to make it more balance by reducing stroke length, and try to reduce white space on the left side.\n");				
+			}
+		}
+
+		if (Dy <= 0.25)
+		{
+			printf("You have made a good distribution of ink in the vertical orientation.\n");
+		}
+		else
+		{
+			printf("You have made your character unbalance vertically.\n");
+
+			if (spYHalfRatio < tpltYHalfRatio)
+			{
+				printf("Your character is too heavy at the bottom.\n");
+				printf("Try to distribute more ink on the upper half of your character.\n");
+			}
+			else
+			{
+				printf("Ink is too heavily distributed on the top.\n");
+				printf("Try to leave less white space at the bottom to make your character look more stable.\n");
+			}
+		}
 	}
 
 	//Getter of FC and near/far scores
@@ -264,6 +391,21 @@ public:
 	}
 
 private:
+	int spXC;
+	int spYC;
+	int tpltXC;
+	int tpltYC;
+
+	int spBBHeight;
+	int spBBWidth;
+	int tpltBBHeight;
+	int tpltBBWidth;
+
+	double spXHalfRatio;
+	double spYHalfRatio;
+	double tpltXHalfRatio;
+	double tpltYHalfRatio;
+
 	double FC;
 	double FA;
 	double FR;

@@ -221,10 +221,10 @@ public:
 		diff[21] = euclideanDistance(sampChar.getNormalizedDistribution(), tempChar303.getNormalizedDistribution(), 8);	
 
 		//For testing:
-		for (int i = 0; i < 22; i++)
+/*		for (int i = 0; i < 22; i++)
 		{
 			printf("diff %d: %3f\n", i, diff[i]);
-		}
+		}*/
 
 		int minIndex = findMinIndex(diff, 22);
 

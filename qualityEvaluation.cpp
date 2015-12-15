@@ -255,11 +255,79 @@ int yUpThirdMesh(unsigned char *binaryImage)
 				numOfPixelsOnRight++;
 			}
 		}
-
-//		printf("right black %d\n", numOfPixelsOnRight);
 	}
 
 	return yUpThird;
+}
+
+int xHalfMesh(unsigned char *binaryImage)
+{
+	int sum = totalNumOfBlack(binaryImage);
+
+	int xHalf = width - 1;
+	int numOfPixelsOnLeft = 0;
+
+	unsigned char *grey = getChannel(binaryImage, 0);
+
+	int lengthOfGrey = height * width;
+
+	double halfBlack = sum / 2.0;
+	double thres = sum * 0.08;
+
+	while ((abs(halfBlack - numOfPixelsOnLeft) > thres) && (xHalf != 0))
+	{
+		numOfPixelsOnLeft = 0;
+
+		xHalf--;
+
+		for (int index = 0; index < lengthOfGrey; index++)
+		{
+			int x = index - (index / width) * width;
+			int y = index / width;
+
+			if (grey[index] == 0 && x <= xHalf)
+			{
+				numOfPixelsOnLeft++;
+			}
+		}
+	}
+
+	return xHalf;
+}
+
+int yHalfMesh(unsigned char *binaryImage)
+{
+	int sum = totalNumOfBlack(binaryImage);
+
+	int yHalf = 0;
+	int numOfPixelsOnTop = 0;
+
+	unsigned char *grey = getChannel(binaryImage, 0);
+
+	int lengthOfGrey = height * width;
+
+	double halfBlack = sum / 2.0;
+	double thres = sum * 0.08;
+
+	while ((abs(halfBlack - numOfPixelsOnTop) > thres) && (yHalf != height - 1))
+	{
+		numOfPixelsOnTop = 0;
+
+		yHalf++;
+
+		for (int index = 0; index < lengthOfGrey; index++)
+		{
+			int x = index - (index / width) * width;
+			int y = index / width;
+
+			if (grey[index] == 0 && y >= yHalf)
+			{
+				numOfPixelsOnTop++;
+			}
+		}
+	}
+
+	return yHalf;
 }
 
 int *projectionX(unsigned char *boundedBinaryImage)
