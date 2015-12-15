@@ -161,6 +161,10 @@ public:
 			printf("diff %d: %3f\n", i, diff[i]);
 		}
 
+		int minIndex = findMinIndex(diff, 22);
+
+		printf("You are trying to write gb%d.\n", nameArray[minIndex]);
+
 		return diff;
 	}
 

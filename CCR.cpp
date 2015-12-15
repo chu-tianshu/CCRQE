@@ -38,10 +38,15 @@ unsigned char *GB1144;
 unsigned char *GB1497;
 unsigned char *GB303;
 
+//sample
+unsigned char *sample;
+
 int main(int argc, char *argv[])
 {
 	//samples
-	const char *name = "gb258_95.ppm";
+	const char *name = argv[1];
+
+	sample = readPPM(name);
 
 	//templates
 	GB43 = readPPM("gb43.ppm");
@@ -67,10 +72,13 @@ int main(int argc, char *argv[])
 	GB1497 = readPPM("gb1497.ppm");
 	GB303 = readPPM("gb303.ppm");
 
-	Recognizer rec(name);
-	rec.measureByGaborFeature();
+//	Recognizer rec(name);
+//	rec.measureByGaborFeature();
 
-	final = GB43;
+	Assesser ass278(sample, GB278);
+	ass278.assess();
+
+	final = sample;
 
 	glutInit(&argc, argv);
 	glutInitWindowPosition(100, 100); // Where the window will display on-screen.

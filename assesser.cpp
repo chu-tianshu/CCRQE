@@ -91,7 +91,7 @@ public:
 
 	void assess()
 	{
-		SC = FC;
+		SC = muonNearFC;
 
 		if (FA < -0.4 || FA > 0.4)
 		{
@@ -122,6 +122,14 @@ public:
 		{
 			SS = muonProperFS * 1.0 / (muonLeftFS + muonProperFS + muonRightFS);
 		}
+
+		S1 = SC;
+		S2 = (SA + SR) / 2.0;
+		S3 = (SDx + SDy + SS) / 3.0;
+
+		printf("Your score in center is %3f\n", S1 * 100);
+		printf("Your score in size is %3f\n", S2 * 100);
+		printf("Your score in projection is %3f\n", S3 * 100);
 	}
 
 	//Getter of FC and near/far scores
@@ -285,4 +293,8 @@ private:
 	double SDx;
 	double SDy;
 	double SS;
+
+	double S1;
+	double S2;
+	double S3;
 };

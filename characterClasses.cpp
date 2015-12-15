@@ -302,6 +302,19 @@ public:
 
 		blurredWeightImage = getCombination(blurredWeightRed, blurredWeightGreen, blurredWeightBlue);
 
+		//Set up total number of black pixels
+		totalBlack = 0;
+
+		unsigned char *greyMap = getChannel(whiteBoundedImage, 1);
+		
+		for (int index = 0; index < width * height; index++)
+		{
+			if (greyMap[index] == 0)
+			{
+				totalBlack++;
+			}
+		}
+
 		//Set up size of Gabor kernel
 		sizeOfGaborKernel = 5;
 
@@ -603,6 +616,11 @@ public:
 		return weightMap;
 	}
 
+	int getTotalBlack()
+	{
+		return totalBlack;
+	}
+
 	int getMaxBlurredWeight()
 	{
 		//For testing:
@@ -750,6 +768,11 @@ public:
 		return heightOfBB;
 	}
 
+	int getAreaOfBB()
+	{
+		return heightOfBB * widthOfBB;
+	}
+
 	int getXOfGravityCenter()
 	{
 		//For testing:
@@ -837,7 +860,8 @@ private:
 	double *blurredWeightMap;
 	double *normalizedBlurredWeightMap;
 	unsigned char *blurredWeightImage;
-	
+
+	int totalBlack;	
 	int sizeOfGaborKernel;
 	double *gaborRealHrzt;
 	double *gaborImaginaryHrzt;
